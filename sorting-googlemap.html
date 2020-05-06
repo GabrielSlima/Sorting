@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <canvas id="myChart"></canvas>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    const validDirections = ["ASC", "DESC"];
+
+    unsorted = [];
+
+
+    for(let i = 0; i < 50; i++){
+        unsorted[i] = Math.floor((Math.random() * 700) + 1);
+    }
+    console.log(unsorted);
+    function sort(list, direction, debug){
+        if(validDirections.indexOf(direction) < 0){
+            return "Invalid direction value";
+        }
+        if(list.length <= 0 ){
+            return "Invalid list";
+        }
+
+        for(let i = list.length-1; i > -1; i--){
+            for(let j = 0; j <= i; j++){
+                if(debug) console.log(list[j] + " greater than " + list[i] + " : " + (list[j] > list[i]));
+
+                if(validDirections.indexOf(direction) === 0) {
+                    if(list[j] > list[i]){
+                        let newjValue = list[i];
+                        let newiValue = list[j];
+                        list[i] = newiValue;
+                        list[j] = newjValue;
+
+                        buildGraph(list);
+                    }
+                }
+                if(validDirections.indexOf(direction) === 1) {
+                    if(list[j] < list[i]){
+                        let newjValue = list[i];
+                        let newiValue = list[j];
+                        list[i] = newiValue;
+                        list[j] = newjValue;
+                        buildGraph(list);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    function buildGraph(list){
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'My First dataset',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: list
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    }
+    sort(unsorted, "ASC", false);
+</script>
+</html>
